@@ -1,0 +1,27 @@
+<div class="pagination-container visible-lg" role="navigation"
+     aria-label="{{paginationConfig.recordsFoundLabel}} {{resultsFound}}" > <!-- TODO: Need to use aria-described by here. its not working now. -->
+    <div class="results-container" id="resultsFound">{{paginationConfig.recordsFoundLabel}}: {{resultsFound}}</div>
+    <div class="pagination-controls" ng-keydown="keypress($event)">
+        <xe-button xe-type="secondary" btn-class="first" label="First" btn-click="first()" disabled="firstPrev"></xe-button>
+        <xe-button xe-type="secondary" btn-class="previous" label="previous" btn-click="prev()" disabled="firstPrev"></xe-button>
+
+        <!--<div class="page-of">-->
+            <span class="page-of">{{paginationConfig.pageLabel}} </span>
+            <input numbers-only ng-model="onPage" ng-change="paggeNumberChange()" aria-label="{{paginationConfig.pageLabel}} {{onPage}} {{paginationConfig.ofLabel}}  {{numberOfPages}}">
+            <label class="">{{paginationConfig.ofLabel}} {{numberOfPages}}</label>
+        <!--</div>-->
+
+        <xe-button xe-type="secondary" btn-class="next" label="next" btn-click="next()" disabled="nextLast"></xe-button>
+        <xe-button xe-type="secondary" btn-class="last" label="last" btn-click="last()" disabled="nextLast"></xe-button>
+
+        <!--<div class="per-page">-->
+            <label id="perPage" class="per-page-select">{{paginationConfig.perPageLabel}}</label>
+            <!-- Using a wraper to use CSS triangle, select alone cannot take :before etc pseudo classes -->
+            <!--<div class="per-page-select" ng-class="{'dis': pageOffsetOptions}">-->
+                <select tabindex="-1" ng-model="offset" ng-options="pageOffset for pageOffset in ::pageOffsets"
+                        ng-change="offsetChanged(true)" ng-disabled="pageOffsetOptions" aria-label="{{paginationConfig.perPageLabel}} ">
+                </select>
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>

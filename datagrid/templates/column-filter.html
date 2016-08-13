@@ -1,0 +1,19 @@
+<div class="column-filter-container">
+    <button type="button" class="column-filter-button" ng-click="bindClickEvent($event)">
+        <span class="placeholder">{{label}}</span>
+        <div class="dropdown-icon">&nbsp;</div>
+    </button>
+    <ul class="column-setting-menu" ng-hide="hideColumnSettingMenu">
+        <li>
+            <xe-checkbox xe-label="{{'dataTable.columnFilter.selectAll' | i18n}}" ng-model="selectAll" ng-click="onSelectAll(header)" id="'0'"></xe-checkbox>
+        </li>
+        <li ng-repeat="heading in header"
+            ng-class="{'disable-container':heading.options.disable}"
+            ng-show="heading.options.columnShowHide">
+            <xe-checkbox xe-label="{{heading.title}}"
+                         ng-model="heading.options.visible"
+                         xe-on-click="hideUnhideColumn(heading)" xe-id="{{$index+1}}"
+                         xe-disabled="heading.options.disable"></xe-checkbox>
+        </li>
+    </ul>
+</div>

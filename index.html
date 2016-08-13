@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html ng-app="test" ng-controller="TestC" browser-detect>
+<head>
+    <title>Data Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link ng-href="dest/css/{{rtl}}.css" rel="stylesheet"/>
+
+    <style type="text/css">
+        html, body {
+            font-size: 100%;
+        }
+
+        .toggle-button {
+            margin-left: 30px;
+            float: left;
+        }
+
+        .clear {
+            clear: both;
+        }
+        .header{
+            background-color: #206E9F;
+            height: 44px;
+            width: 100%;
+        }
+        
+         .button-container{
+            background-color: #F9FAFB;
+            height: 44px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .demo-container {
+            background-color: #EFF4F8;
+            padding: 10px 10px;
+            height: 100%;
+			width:100%;
+			float:left;
+        }
+         .demo-footer {
+            background-color: #7dadcb;
+            bottom: -1px;
+            height: 30px;
+            position: fixed;
+            width: 100%;
+             
+        }
+		.side-panel {
+			float:right;
+			height:500px;
+			width:25%;
+			border:1px solid #000;
+		}
+
+        /************************* Drag and Drop *******************************/
+        #dragtable {
+            position: absolute;
+            z-index:500;
+        }
+
+        .dragged div, .dragged{
+            opacity: 0;
+        }
+
+        .drag-enter, .drag-enter:first-child{
+            opacity: 0.3;
+        }
+
+        [draggable] {
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+
+        #dragtable th, #dragtable td {
+            width:15em;
+            height:3em;
+            padding:0.5em;
+            background: #CAD5DE !important;
+        }
+    </style>
+
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+    <script src="dest/js/xe-ui-components.js"></script>
+
+    <script>
+        angular.module("test", ['xe-ui-components'])
+        .controller("TestC", ["$scope", "$http", "$q", function($scope, $http, $q) {
+            $scope.rtl = "xe-ui-components.min";
+            $scope.rtlText = "Switch to RTL";
+            $scope.urlTest = "/app/components/data"; 
+            $scope.records = 1;
+            $scope.rows = [
+				{
+				  "class": "net.hedtech.banner.student.faculty.SectionDecorator",
+				  "courseNumber": "MATH",
+				  "courseReferenceNumber": "35002",
+				  "courseTitle": "History Mathematics",
+				  "eligible": 2,
+				  "enrolled": 2,
+				  "enrollment": 2,
+				  "enterAccess": true,
+				  "finalGradingEnabled": true,
+				  "graded": 1,
+				  "gradedStatus": "IP",
+				  "id": 20222,
+				  "midtermEligible": 2,
+				  "midtermGraded": 2,
+				  "midtermGradingEnabled": true,
+				  "midtermRemaining": 0,
+				  "partOfTerm": "1",
+				  "remaining": 1,
+				  "rolledStatus": "IP",
+				  "sequenceNumber": "0",
+				  "subject": "HA01",
+				  "subjectDescription": "EGB Self Service",
+				  "term": "201440",
+				  "termDescription": "Winter 2014",
+				  "viewAccess": true
+				}
+			];      
+			
+			$scope.columns = [
+				{position: 1, name: 'rolledStatus', title: 'Rolled', options: {visible: true, sortable:true,ascending: true}},
+                {position: 2, name: 'subject', title: 'Subject', options: {visible: true, sortable:true,ascending: true}},
+				{position: 3, name: 'courseNumber', title: 'Course', options: {visible: true, sortable:true,ascending: true}},
+				{position: 4, name: 'sequenceNumber', title: 'Section', options: {visible: true, sortable:true,ascending: true}},
+				{position: 5, name: 'courseTitle', title: 'Title', options: {visible: true, sortable:true,ascending: true}},
+				{position: 6, name: 'term', title: 'Term', options: {visible: true, sortable:true,ascending: true}},
+				{position: 7, name: 'courseReferenceNumber', title: 'CRN', options: {visible: true, sortable:true,ascending: true}},
+            ];
+
+                    $scope.draggableColumnsNames = [
+                        'rolledStatus', 'subject','courseNumber', 'sequenceNumber', 'courseTitle','term','courseReferenceNumber'
+                    ];
+
+			
+            $scope.toggleRTL = function() {
+                if($scope.rtl === "xe-ui-components.min") {
+                    $scope.rtl = "components-rtl";
+                    $scope.rtlText = "Switch to LTR";
+                } else {
+                    $scope.rtl = "xe-ui-components.min";
+                    $scope.rtlText = "Switch to RTL";
+                }
+            }
+            
+            $scope.mobileConfig = {
+                positionCode: 1,
+                positionEclsDesc: 1, 
+                positionTitle: 1, 
+                formattedPositionDescEffectiveDate: 1, 
+                positionDescStatus: 1
+            };
+            $scope.onDoubleClick = function(data,index){
+                console.log("data-->" , data,index);
+            };
+			
+			$scope.paginationConfig ={
+                    pageLengths : [ 5, 10, 25, 50, 100],
+                    paginate    : true,
+                    offset : $scope.pageMaxSize,
+                    continuousScrolling: false,
+                    perPageLabel :"per page",
+                    pageLabel: "page",
+                    ofLabel :"of",
+                    recordsFoundLabel :"result found"
+            };
+			
+			$scope.searchConfig = {
+                    label:"Search",
+                    startCount: 2,
+                    noDataMsg:"No Result"
+            };
+        }]);        
+    </script>
+    <script src="datagrid/datagrid.js"></script>
+</head>
+
+<body dir="{{rtl === 'components-rtl' ? 'rtl': 'ltr'}}">    
+    <div class="header"></div>
+	<!--<div class="side-panel">
+		sidepanel
+	</div>-->
+    <div class="button-container">
+        <xe-button xe-type="primary" btn-class="toggle-button" label="{{rtlText}}" btn-click="toggleRTL()"></xe-button>
+    </div>
+    
+   
+    <div class="demo-container">
+        <xe-table-grid
+            header="columns"
+            content="rows"
+            paginate="true"
+            toolbar="true"
+            caption="Table Caption"
+            end-point="urlTest"
+            page-offsets="arr"
+            results-found="records"
+            filter-label="Show/Hide Column"
+            search-label="Search"
+            continuous-scrolling="false"
+            height="416px"
+            mobile-layout="mobileConfig"
+            on-row-double-click = "onDoubleClick(data,index)"
+            draggable-columns-names="draggableColumnsNames" 
+			pagination-config ="paginationConfig"
+			display-no-data-msg ="displayNoDataMsg"
+			search= "searchConfig"
+			>
+            <xe-cell-markup column-name="gradedStatus">
+			 {{rtlText}}
+               
+            </xe-cell-markup>  
+        </xe-table-grid>
+    </div>
+	 {{rtlText}}
+	
+    <div class="demo-footer"></div>
+</body>
+</html>
